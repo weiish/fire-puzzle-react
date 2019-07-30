@@ -16,4 +16,35 @@
   text-align: center;
   vertical-align: bottom;
   margin: 2px;
+  -moz-border-radius:28px;
+	-webkit-border-radius:28px;
+  border-radius:28px;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	padding:16px 19px;
+	text-decoration:none;
+}
+.node:active {
+	position:relative;
+	top:1px;
+}
+
+.nodegreen {
+	background-color:#44c767;
+	border:1px solid #18ab29;
+	text-shadow:0px 1px 0px #2f6627;
+}
+.nodegreen:hover {
+	background-color:#5cbf2a;
+}
+
+.nodeblue {
+  background-color:#455bc7;
+  border:1px solid #1984ab;
+  text-shadow:0px 1px 0px #312866;
+}
+.nodeblue:hover {
+  background-color:#2a4ebd;
 }

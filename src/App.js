@@ -11,13 +11,25 @@ class App extends React.Component {
   }
 
   handleClick(i) {
-    console.log('hi')
+    let neighbors = getNeighbors(i,6)
+    neighbors.push(i)
+    
+    let currentSquares = this.state.squares;
+    neighbors.forEach(n => {
+      if (n >= 0) {
+        currentSquares[n] = currentSquares[n] === 0 ? 1 : 0
+      }
+    })
+
+    this.setState({squares: currentSquares})
   }
 
   render() {
     return (
       <div className="App">
-        <Grid onClick={this.handleClick}/>
+        <Grid 
+        onClick={i => this.handleClick(i)} 
+        squares={this.state.squares}/>
       </div>
     );
   }
@@ -29,7 +41,7 @@ class Grid extends React.Component {
     return (
       <GridNode 
         key={i}
-        value={0}
+        value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
     )
@@ -44,7 +56,6 @@ class Grid extends React.Component {
       }
       table.push(<div className="board-row">{children}</div>);
     }
-    console.log(table)
     return table;
   }
 
@@ -62,13 +73,43 @@ class Grid extends React.Component {
 }
 
 class GridNode extends React.Component {
+
+
   render() {
     return (
       <div>
-        <button className="node">{this.props.value}</button>
+        <button className={"node " + (this.props.value===0?"nodegreen":"nodeblue")} onClick={this.props.onClick}>{this.props.value}</button>
       </div>
     )
   }
+}
+
+const getNeighbors = (i, gridSize) => {
+  const column = i % gridSize
+  const row = Math.floor(i/gridSize)
+  let left, right, top, bottom
+  left = -1
+  right = -1
+  top = -1
+  bottom = -1
+  //Get left
+  if (column !== 0) {
+    left = i - 1
+  }
+  //Get right
+  if (column !== gridSize-1) {
+    right = i + 1
+  }
+  //Get top
+  if(row !== 0) {
+    top = i - gridSize
+  }
+  //Get bottom
+  if(row !== gridSize-1) {
+    bottom = i + gridSize
+  }
+  let neighbors = [top, right, bottom, left]
+  return neighbors
 }
 
 export default App;
