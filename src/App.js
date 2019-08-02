@@ -5,15 +5,16 @@ import './App.css';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.randomize = this.randomize.bind(this);
     this.state = {
       squares: Array(36).fill(0)
     }
   }
 
   handleClick(i) {
-    let neighbors = getNeighbors(i,6)
+    let neighbors = getNeighbors(i, 6)
     neighbors.push(i)
-    
+
     let currentSquares = this.state.squares;
     neighbors.forEach(n => {
       if (n >= 0) {
@@ -21,25 +22,55 @@ class App extends React.Component {
       }
     })
 
-    this.setState({squares: currentSquares})
+    this.setState({ squares: currentSquares })
+  }
+
+  randomize() {
+    const flipSwitch = (i) => {
+      let neighbors = getNeighbors(i, 6)
+      neighbors.push(i)
+
+      let currentSquares = this.state.squares;
+      neighbors.forEach(n => {
+        if (n >= 0) {
+          currentSquares[n] = currentSquares[n] === 0 ? 1 : 0
+        }
+      })
+      return currentSquares
+    }
+    //const max_squares = this.state.squares.length 
+    const max_squares = 36
+    let squares = this.state.squares
+    for (var i = 0; i < 100; i++) {
+      squares = flipSwitch(Math.floor(Math.random() * max_squares))
+    }
+    this.setState({ squares })
   }
 
   render() {
     return (
       <div className="App">
-        <Grid 
-        onClick={i => this.handleClick(i)} 
-        squares={this.state.squares}/>
+        <Grid
+          onClick={i => this.handleClick(i)}
+          squares={this.state.squares} />
+        <RandomButton onClick={this.randomize} squares={this.state.squares} />
       </div>
     );
   }
-  
+}
+
+function RandomButton(props) {
+  return (
+    <button className="randomizebutton" onClick={props.onClick}>
+      Randomize
+    </button>
+  );
 }
 
 class Grid extends React.Component {
   renderNode(i) {
     return (
-      <GridNode 
+      <GridNode
         key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
@@ -65,7 +96,7 @@ class Grid extends React.Component {
     return (
       <div>
         {
-          this.createTable(gridSize,gridSize)
+          this.createTable(gridSize, gridSize)
         }
       </div>
     )
@@ -78,7 +109,7 @@ class GridNode extends React.Component {
   render() {
     return (
       <div>
-        <button className={"node " + (this.props.value===0?"nodegreen":"nodeblue")} onClick={this.props.onClick}>{this.props.value}</button>
+        <button className={"node " + (this.props.value === 0 ? "nodegreen" : "nodeblue")} onClick={this.props.onClick}>{this.props.value}</button>
       </div>
     )
   }
@@ -86,7 +117,7 @@ class GridNode extends React.Component {
 
 const getNeighbors = (i, gridSize) => {
   const column = i % gridSize
-  const row = Math.floor(i/gridSize)
+  const row = Math.floor(i / gridSize)
   let left, right, top, bottom
   left = -1
   right = -1
@@ -97,15 +128,15 @@ const getNeighbors = (i, gridSize) => {
     left = i - 1
   }
   //Get right
-  if (column !== gridSize-1) {
+  if (column !== gridSize - 1) {
     right = i + 1
   }
   //Get top
-  if(row !== 0) {
+  if (row !== 0) {
     top = i - gridSize
   }
   //Get bottom
-  if(row !== gridSize-1) {
+  if (row !== gridSize - 1) {
     bottom = i + gridSize
   }
   let neighbors = [top, right, bottom, left]
